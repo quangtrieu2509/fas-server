@@ -11,7 +11,7 @@ const { sendEmail } = require("./mailer");
 const sendWarningMail = require("./mailer/warningMail")
 
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors())
 
