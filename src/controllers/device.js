@@ -29,7 +29,7 @@ const getDevice = async(req, res) => {
         const device = await Device.findOne({ _id: req.params.id, userId: req.user._id });
 
         if(!device) 
-            return res.json({message: 'you are not allowed to access'});
+            return res.json({error: 'Bạn không có quyền truy cập'});
 
         return res.json(device);
 
@@ -45,12 +45,12 @@ const updateDevice = async(req, res) => {
         const device = await Device.findOne({ _id: req.params.id, userId: req.user._id });
 
         if(!device) 
-            return res.json({message: 'you are not allowed to access'});
+            return res.json({error: 'Bạn không có quyền truy cập'});
 
         if(name) {
             const uDevice = await Device.findByIdAndUpdate(device._id, { name });
             if(!uDevice)
-                return res.json({message:'update failed'});
+                return res.json({error:'Cập nhật thất bại'});
         }
 
         if(state !== undefined && device.state != state ) {
@@ -73,7 +73,7 @@ const updateDevice = async(req, res) => {
             if(!uDevice) console.log("Update system state failed!");
         }
         
-        return res.json({message: 'Changed successfully'});
+        return res.json({message: 'Cập nhật thành công'});
     }catch(err) {
         console.log(err);
         return res.json({error: err.message});

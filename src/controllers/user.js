@@ -8,10 +8,10 @@ const login = async(req, res) =>{
         const {phoneNumber, password} = req.body;
 
         const user = await User.findOne({phoneNumber});
-        if(!user) return res.json({message: 'phone number doesnot exist'});
+        if(!user) return res.json({error: 'Số điện thoại không tồn tại'});
 
         const validPwd = await bcrypt.compare(password, user.password);
-        if(!validPwd) return res.json({message: 'wrong password'});
+        if(!validPwd) return res.json({error: 'Sai mật khẩu'});
 
         const accessToken = Util.generateAccessToken(user);
 
@@ -28,11 +28,11 @@ const register = async(req, res) =>{
     
         const accountCheck = await User.findOne({phoneNumber});
         if(accountCheck)
-            return res.json({message: 'phone number existed'});
+            return res.json({error: 'Số điện thoại đã tồn tại'});
 
         const user = await User.create(req.body);
 
-        if(!user) return res.json({message: 'cannot create user'});
+        if(!user) return res.json({error: 'Tạo người dùng mới thất bại'});
         
         return res.json({ user: userDTO(user) });
     }catch(err){
@@ -48,12 +48,12 @@ const changePassword = async(req, res) => {
         const user = await User.findById(req.user._id);
 
         const validPwd = await bcrypt.compare(oldPassword, user.password);
-        if(!validPwd) return res.json({message: 'wrong password'});
+        if(!validPwd) return res.json({error: 'Sai mật khẩu'});
         
         const nUser = await User.findByIdAndUpdate(user._id, {password: newPassword});
-        if(!nUser) return res.json({message: 'update password failed'})
+        if(!nUser) return res.json({error: 'Cập nhật mật khẩu thất bại'})
 
-        return res.json({message: 'update successfully'});
+        return res.json({message: 'Cập nhật thành công'});
     }catch(err){
         console.log(err);
         return res.json({error: err.message});
@@ -101,9 +101,9 @@ const updateProfile = async(req, res) => {
         const {password, _id, ...body} = req.body;
 
         const user = await User.findByIdAndUpdate(req.user._id, body);
-        if(!user) return res.json({message: 'update failed'});
+        if(!user) return res.json({error: 'Cập nhật thất bại'});
 
-        return res.json({message: 'update successfully'});
+        return res.json({message: 'Cập nhật thành công'});
     }catch(err) {
         console.log(err);
         return res.json({error: err.message});
