@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
-const bcrypt = require('bcrypt');
-require('dotenv').config();
-const BCRYPT_SALT = parseInt(process.env.BCRYPT_SALT);
+const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
+require('dotenv').config()
 
-const Schema = mongoose.Schema;
+const BCRYPT_SALT = parseInt(process.env.BCRYPT_SALT)
+const Schema = mongoose.Schema
 
 const schema = new Schema(
     {
@@ -24,7 +24,7 @@ const schema = new Schema(
         timestamps: true,
         versionKey: false,
     }
-);
+)
 
 schema.pre('save', async function (next) {
     if (!this.isModified('password')) {
@@ -42,6 +42,6 @@ schema.pre('findOneAndUpdate', async function (next) {
     this.getUpdate().password = await bcrypt.hash(this.getUpdate().password, BCRYPT_SALT)
 })
   
-const User = mongoose.model('User', schema);
+const User = mongoose.model('User', schema)
 
-module.exports = User;
+module.exports = User

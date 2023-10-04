@@ -1,5 +1,6 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const mongoose = require('mongoose')
+
+const Schema = mongoose.Schema
 
 const schema = new Schema(
     {
@@ -17,8 +18,8 @@ const schema = new Schema(
         timestamps: true,
         versionKey: false,
     }
-);
+)
 
-const System = mongoose.model('Device', schema);
+const System = mongoose.model('Device', schema)
 
-module.exports = System;
+module.exports = System

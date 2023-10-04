@@ -1,5 +1,6 @@
-const nodemailer = require("nodemailer")
-const Mailer = require('../configs/mailer.config');
+const nodemailer = require('nodemailer')
+
+const Mailer = require('../configs/mailer.config')
 
 module.exports = {
 

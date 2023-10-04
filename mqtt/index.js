@@ -1,10 +1,10 @@
-const mqtt = require('mqtt');
+const mqtt = require('mqtt')
+const { ObjectId } = require('mongoose').Types
+
 const MQTTBroker = require('../configs/mqtt.config')
 const Device = require('../src/models/device')
 const Param = require('../src/models/param')
-const sendWarningMail = require('../mailer/warningMail');
-const { ObjectId } = require('mongoose').Types;
-
+const sendWarningMail = require('../mailer/warningMail')
 
 function getMQTTClient(){
     const client = mqtt.connect(
@@ -13,18 +13,18 @@ function getMQTTClient(){
         clean: true,
         connectTimeout: 4000,
         reconnectPeriod: 1000
-    });
-    return client;
+    })
+    return client
 }
 
 function use(){
-    const client = this.getMQTTClient();
-    const [DataTopic, StateTopic] = [MQTTBroker.DATA_TOPIC, MQTTBroker.STATE_TOPIC];
+    const client = this.getMQTTClient()
+    const [DataTopic, StateTopic] = [MQTTBroker.DATA_TOPIC, MQTTBroker.STATE_TOPIC]
 
     client.on('connect', () => {
         console.log(`Connected to Broker ${MQTTBroker.HOST} port ${MQTTBroker.PORT}`)
         client.subscribe([DataTopic, StateTopic], () => {
-          console.log(`Subscribed to topic ${DataTopic} and ${StateTopic}`);
+          console.log(`Subscribed to topic ${DataTopic} and ${StateTopic}`)
         })
     })
       
@@ -38,10 +38,10 @@ function use(){
                 const { deviceId, temp, fire, gas, warning} = data
 
                 console.log('------------------------------------')
-                console.log(`Recieve data from ${deviceId}: \n\t- Temp: ${temp}\n\t- Fire: ${fire}\n\t- Gas: \t${gas}\n`);
+                console.log(`Recieve data from ${deviceId}: \n\t- Temp: ${temp}\n\t- Fire: ${fire}\n\t- Gas: \t${gas}\n`)
                 
                 if(Boolean(warning)){
-                    await sendWarningMail(deviceId);
+                    await sendWarningMail(deviceId)
                 }
 
                 const params = { 
@@ -52,8 +52,8 @@ function use(){
                     warning: Boolean(warning) 
                 }
                 // Lưu dữ liệu vào db
-                const newParams = await Param.create(params);
-                if(!newParams) console.log('save data of params to database failed');
+                const newParams = await Param.create(params)
+                if(!newParams) console.log('save data of params to database failed')
             }
             
             // Nếu phần cứng báo cáo thay đổi trạng thái
@@ -62,11 +62,11 @@ function use(){
                 const data = JSON.parse(payload.toString())
                 const { state, deviceId } = data
                 
-                console.log (deviceId, ' ---+++++---',  statetate);
+                console.log (deviceId, ' ---+++++---',  statetate)
 
                 // Update vào db
-                const device = await Device.findOneAndUpdate({ _id: deviceId }, { state });
-                if(!device) console.log("Update system state failed!");
+                const device = await Device.findOneAndUpdate({ _id: deviceId }, { state })
+                if(!device) console.log('Update system state failed!')
 
             }
         } catch (error) {
@@ -76,4 +76,4 @@ function use(){
     })
 }
 
-module.exports = {getMQTTClient, use};
+module.exports = {getMQTTClient, use}

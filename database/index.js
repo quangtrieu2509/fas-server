@@ -1,6 +1,7 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
+require('dotenv').config()
+
 const db = require('../configs/db.config')
-require("dotenv").config();
 
 const uri = `mongodb+srv://${db.USER}:${db.PASSWORD}@cluster0.xdk8qqa.mongodb.net/${db.NAME}?retryWrites=true&w=majority`;
 

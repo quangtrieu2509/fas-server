@@ -1,5 +1,5 @@
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
 
 const Util = {
     generateAccessToken: (data) => {
@@ -7,8 +7,8 @@ const Util = {
             _id: data._id,
             email: data.email,
             name: data.name,
-        }, process.env.ACCESS_SECRET_KEY, { expiresIn: "100d" });
+        }, process.env.ACCESS_SECRET_KEY, { expiresIn: '100d' })
     }
 }
 
-module.exports = Util;
+module.exports = Util

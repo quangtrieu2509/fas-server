@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config()
 
 module.exports = {
     MAIL_HOST: process.env.MAIL_HOST,
