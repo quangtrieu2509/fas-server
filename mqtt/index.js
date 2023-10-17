@@ -1,15 +1,16 @@
 const mqtt = require('mqtt')
 const { ObjectId } = require('mongoose').Types
+const uuid = require('uuid')
 
 const MQTTBroker = require('../configs/mqtt.config')
 const Device = require('../src/models/device')
 const Param = require('../src/models/param')
 const sendWarningMail = require('../mailer/warningMail')
 
-function getMQTTClient(){
+function getMQTTClient(clientId){
     const client = mqtt.connect(
         `mqtt://${MQTTBroker.HOST}:${MQTTBroker.PORT}`, {
-        clientId: MQTTBroker.CLIENT_ID,
+        clientId: clientId,
         clean: true,
         connectTimeout: 4000,
         reconnectPeriod: 1000
@@ -18,7 +19,7 @@ function getMQTTClient(){
 }
 
 function use(){
-    const client = this.getMQTTClient()
+    const client = this.getMQTTClient(uuid.v4())
     const [DataTopic, StateTopic] = [MQTTBroker.DATA_TOPIC, MQTTBroker.STATE_TOPIC]
 
     client.on('connect', () => {
@@ -62,7 +63,7 @@ function use(){
                 const data = JSON.parse(payload.toString())
                 const { state, deviceId } = data
                 
-                console.log (deviceId, ' ---+++++---',  statetate)
+                console.log (deviceId, '---+++++---',  statetate)
 
                 // Update vào db
                 const device = await Device.findOneAndUpdate({ _id: deviceId }, { state })

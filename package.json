@@ -22,7 +22,8 @@
     "mongoose": "^7.5.0",
     "mqtt": "^5.0.4",
     "node-cron": "^3.0.2",
-    "nodemailer": "^6.9.5"
+    "nodemailer": "^6.9.5",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "morgan": "^1.10.0",

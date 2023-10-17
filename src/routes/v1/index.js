@@ -21,7 +21,7 @@ router.route('/device/').get(Authz.verifyToken, deviceController.getAllDevices)
 
 router.route('/params/:deviceId').get(Authz.verifyToken, paramController.getParams)
 
-router.post('/device/', deviceController.create);
+// router.post('/device/', deviceController.create);
 
 module.exports = router;
 

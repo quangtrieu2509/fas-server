@@ -12,7 +12,7 @@ const Authz = {
                 if(err)
                     return res.json({Error:'Token không hợp lệ'})
                 req.user = user
-                console.log('Verified!')
+                // console.log('Verified!')
                 return next()
             })
         }

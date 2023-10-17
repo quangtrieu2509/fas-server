@@ -1,3 +1,5 @@
+const uuid = require('uuid')
+
 const Device = require('../models/device')
 const mqtt = require('../../mqtt')
 const brokerInfo = require('../../configs/mqtt.config')
@@ -54,7 +56,7 @@ const updateDevice = async(req, res) => {
         }
 
         if(state !== undefined && device.state != state ) {
-            const client = mqtt.getMQTTClient()
+            const client = mqtt.getMQTTClient(uuid.v4())
             const message = {
                 deviceId: device._id.toString(),
                 state: state,
@@ -67,6 +69,7 @@ const updateDevice = async(req, res) => {
                 
                 console.log(message)
             })
+            client.end()
 
             // update to db
             const uDevice = await Device.findByIdAndUpdate(device._id, { state })
