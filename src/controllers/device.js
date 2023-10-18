@@ -44,6 +44,7 @@ const getDevice = async(req, res) => {
 const updateDevice = async(req, res) => {
     try {
         const {name, state} = req.body
+        // console.log(req.body)
         const device = await Device.findOne({ _id: req.params.id, userId: req.user._id })
 
         if(!device) 
@@ -67,13 +68,14 @@ const updateDevice = async(req, res) => {
                     await Device.findByIdAndUpdate(device._id, { state: device.state })
                 }
                 
-                console.log(message)
+                // console.log(message)
+                client.end()
             })
-            client.end()
+       
 
             // update to db
             const uDevice = await Device.findByIdAndUpdate(device._id, { state })
-            if(!uDevice) console.log('Update system state failed!')
+            if(!uDevice) console.log('Update system state failed.')
         }
         
         return res.json({message: 'Cập nhật thành công'})

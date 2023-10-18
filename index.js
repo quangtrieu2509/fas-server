@@ -31,8 +31,8 @@ mqtt.use()
 // Đặt lịch xóa dữ liệu ngày hôm trước vào đúng 0h sáng mỗi ngày
 const task = cron.schedule('59 23 * * *', async () =>  {
     await Param.deleteMany({}, (err)=>{
-        if(!err) console.log('Delete Successfully!')
-        else console.log('Delete Failed!')
+        if(!err) console.log('Schedule delete Successfully.')
+        else console.log('Schedule delete Failed.')
     })
   }, {
     scheduled: true
@@ -47,5 +47,5 @@ app.use(express.json())  // for parsing application/json
 app.use('/fas/v1', routeV1)
 
 app.listen(PORT, ()=>{
-    console.log(`Listening on port ${PORT}!`)
+    console.log(`Listening on port ${PORT}.`)
 })

@@ -23,25 +23,25 @@ function use(){
     const [DataTopic, StateTopic] = [MQTTBroker.DATA_TOPIC, MQTTBroker.STATE_TOPIC]
 
     client.on('connect', () => {
-        console.log(`Connected to Broker ${MQTTBroker.HOST} port ${MQTTBroker.PORT}`)
+        console.log(`Connected to Broker ${MQTTBroker.HOST} port ${MQTTBroker.PORT}.`)
         client.subscribe([DataTopic, StateTopic], () => {
-          console.log(`Subscribed to topic ${DataTopic} and ${StateTopic}`)
+          console.log(`Subscribed to topic ${DataTopic} and ${StateTopic}.`)
         })
     })
       
-    // Xử lý dữ liệu gửi tới
     client.on('message', async function(topic, payload){
         try {
-            // Nếu phần cứng gửi dữ liệu lên
             if(topic == DataTopic){
                 // Lấy dữ liệu
                 const data = JSON.parse(payload.toString())
-                const { deviceId, temp, fire, gas, warning} = data
+                const { deviceId, temp, fire, gas, warning, preWarning} = data
 
-                console.log('------------------------------------')
-                console.log(`Recieve data from ${deviceId}: \n\t- Temp: ${temp}\n\t- Fire: ${fire}\n\t- Gas: \t${gas}\n`)
+                // console.log('------------------------------------')
+                // console.log(`Recieve data from ${deviceId}:`)
+                // console.log(`\t- Temp: ${temp}\n\t- Fire: ${fire}\n\t- Gas: \t${gas}`)
+                // console.log(`\t- PreWarning: ${preWarning}\n\t- Warning: ${warning}\n`)
                 
-                if(Boolean(warning)){
+                if(Boolean(warning) && Boolean(warning) !== Boolean(preWarning)){
                     await sendWarningMail(deviceId)
                 }
 
@@ -54,26 +54,24 @@ function use(){
                 }
                 // Lưu dữ liệu vào db
                 const newParams = await Param.create(params)
-                if(!newParams) console.log('save data of params to database failed')
+                if(!newParams) console.log('Save data of params to database failed.')
             }
             
-            // Nếu phần cứng báo cáo thay đổi trạng thái
             if(topic == StateTopic){
                 // Cập nhật trạng thái mới trên cơ sở dữ liệu
                 const data = JSON.parse(payload.toString())
                 const { state, deviceId } = data
                 
-                console.log (deviceId, '---+++++---',  statetate)
+                console.log (deviceId, '------',  state)
 
                 // Update vào db
                 const device = await Device.findOneAndUpdate({ _id: deviceId }, { state })
-                if(!device) console.log('Update system state failed!')
+                if(!device) console.log('Update system state failed.')
 
             }
         } catch (error) {
             console.log(error)
         }
- 
     })
 }
 
