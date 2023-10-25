@@ -62,7 +62,7 @@ const updateDevice = async(req, res) => {
                 deviceId: device._id.toString(),
                 state: state,
             }
-            client.publish(brokerInfo.COMMAND_TOPIC, JSON.stringify(message), {qos: 0, retain: false}, async (err) => {
+            client.publish(brokerInfo.COMMAND_TOPIC, JSON.stringify(message), {qos: 2, retain: false}, async (err) => {
                 if(err){
                     console.error(err)
                     await Device.findByIdAndUpdate(device._id, { state: device.state })
