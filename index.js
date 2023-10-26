@@ -1,5 +1,5 @@
 const express = require('express')
-const cron = require('node-cron')
+const schedule = require('node-schedule');
 const cors = require('cors')
 // const morgan = require('morgan')
 require('dotenv').config()
@@ -29,16 +29,15 @@ mqtt.use()
 // })
 
 // Đặt lịch xóa dữ liệu ngày hôm trước vào đúng 0h sáng mỗi ngày
-const task = cron.schedule('59 23 * * *', async () =>  {
-    await Param.deleteMany({}, (err)=>{
-        if(!err) console.log('Schedule delete Successfully.')
-        else console.log('Schedule delete Failed.')
+schedule.scheduleJob('59 23 * * *', () => {
+  Param.deleteMany({})
+    .then(() => {
+        console.log('Schedule delete Successfully.')
     })
-  }, {
-    scheduled: true
-})
-  
-task.start()
+    .catch(() => {
+        console.log('Schedule delete Failed.')
+    });
+});
 
 app.use(express.urlencoded({extended: true})) // for parsing application/x-www-form-urlencoded
 app.use(express.json())  // for parsing application/json
